@@ -36,7 +36,7 @@ def delete_album(albumID):
 	albums.remove(deleted_album[0])
 	return jsonify({'Deleted album:': deleted_album[0]})
 
-@app.route('/albums', methods=['POST'])
+@app.route('/albums/', methods=['POST'])
 def new_album():
 	new_alb={
 		'ID' : request.json['ID'],
@@ -48,11 +48,7 @@ def new_album():
 	albums.append(new_alb)
 	return jsonify({'Added': new_alb})
 
-if __name__ == "__main__":
-	app.run(host="0.0.0.0", debug=True)
-
-
-@app.route('/albums/<albumID>', methods=['GET'])
+@app.route('/albums/album/<albumID>', methods=['GET'])
 def getSongsList(albumID):
         song_choose = [song for song in albums if song['ID'] == albumID]
         if len(song_choose) == 0:
