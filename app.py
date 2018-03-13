@@ -9,12 +9,29 @@ import os
 app = Flask(__name__)
 
 albums = [
-			{'ID' : '1', 'Album' : 'Brain Eno', 'Artist' : 'Reflection', 'Genre' : 'Ambient', 'Producer' : 'Brian Eno'},
-			{'ID' : '2', 'Album' : 'Chief Keef', 'Artist' : 'Two Zero One Seven', 'Genre' : 'Drill', 'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop'}
-		]
+	       {
+                'ID' : '1',
+                'Album' : 'Brain Eno',
+                'Artist' : 'Reflection',
+                'Genre' : 'Ambient',
+                'Producer' : 'Brian Eno'
+                },
+
+		{
+                 'ID' : '2',
+                 'Album' : 'Chief Keef', 
+                 'Artist' : 'Two Zero One Seven', 
+                 'Genre' : 'Drill', 
+                 'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop'
+                 }
+	]
 
 songs = [
-        	{'AlbumID' : '1', 'SongTitle' : 'Test test', 'SongID':'00001'}
+        	{
+                'AlbumID' : '1',
+                 'SongTitle' : 'Test test',
+                 'SongID':'00001'
+                 }
         ]
 
 redis = Redis(host='redis', port=6379)
