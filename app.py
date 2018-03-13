@@ -17,7 +17,7 @@ redis = Redis(host='redis', port=6379)
 def hello():
 	return 'List of albums'
 
-@app.route('/albums', methods=['GET'])
+@app.route('/albums/', methods=['GET'])
 def getAllInfo():
 	return jsonify({'Information':albums})
 
