@@ -9,30 +9,36 @@ import os
 app = Flask(__name__)
 
 albums = [
-	       {
-                'ID' : '1',
-                'Album' : 'Brain Eno',
-                'Artist' : 'Reflection',
-                'Genre' : 'Ambient',
-                'Producer' : 'Brian Eno'
-                },
+        {
+        'ID' : '1',
+        'Album' : 'Brain Eno',
+        'Artist' : 'Reflection',
+        'Genre' : 'Ambient',
+        'Producer' : 'Brian Eno'
+        },
 
-		{
-                 'ID' : '2',
-                 'Album' : 'Chief Keef', 
-                 'Artist' : 'Two Zero One Seven', 
-                 'Genre' : 'Drill', 
-                 'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop'
-                 }
-	]
+	{
+         'ID' : '2',
+         'Album' : 'Chief Keef', 
+         'Artist' : 'Two Zero One Seven', 
+         'Genre' : 'Drill', 
+         'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop'
+         }
+]
 
 songs = [
-        	{
-                 'AlbumID' : '1',
-                 'SongTitle' : 'Test test',
-                 'SongID':'00001'
-                 }
-        ]
+        {
+         'AlbumID' : '1',
+         'SongTitle' : 'The Big Ship',
+         'SongID':'01'
+         },
+
+         {
+         'AlbumID' : '2',
+         'SongTitle' : 'Earned It',
+         'SongID':'02'
+         }
+]
 
 redis = Redis(host='redis', port=6379)
 
@@ -42,12 +48,18 @@ def hello():
 
 @app.route('/albums/', methods=['GET'])
 def getAllInfo():
-	return jsonify({'Information':albums})
+	return jsonify({'Albums':albums})
 
+@app.route('/albums/album/<albumID>', methods=['GET'])
+def getSongsList(albumID):
+        song_choose = [song for song in songs if song['AlbumID'] == albumID]
+        if len(song_choose) == 0:
+                abort(404)
+        return jsonify({'Songs': song_choose[0]})
 
 @app.route('/albums/<albumID>', methods=['DELETE'])
 def delete_album(albumID):
-	deleted_album=[album for album in albums if (album['ID'] == albumID)]
+	deleted_album = [album for album in albums if (album['ID'] == albumID)]
 	if len(deleted_album) == 0:
 		abort(404)
 	albums.remove(deleted_album[0])
@@ -55,7 +67,7 @@ def delete_album(albumID):
 
 @app.route('/albums/', methods=['POST'])
 def new_album():
-	new_alb={
+	new_alb = {
 		'ID' : request.json['ID'],
 		'Album' : request.json['Album'],
 		'Artist' : request.json['Artist'],
@@ -63,14 +75,7 @@ def new_album():
 		'Producer' : request.json['Producer']
 	}
 	albums.append(new_alb)
-	return jsonify({'Added': new_alb})
-
-@app.route('/albums/album/<albumID>', methods=['GET'])
-def getSongsList(albumID):
-        song_choose = [song for song in albums if song['ID'] == albumID]
-        if len(song_choose) == 0:
-                abort(404)
-        return jsonify({'songs': song_choose[0]})
+	return jsonify({'Added album': new_alb})
 
 @app.route('/albums/<albumID>', methods=['PUT'])
 def updateAlbums(albumID):
@@ -91,7 +96,7 @@ def updateAlbums(albumID):
         update_album[0]['Artist'] = request.json.get('Artist', update_album[0]['Artist'])
         update_album[0]['Genre'] = request.json.get('Genre', update_album[0]['Genre'])
         update_album[0]['Producer'] = request.json.get('Producer', update_album[0]['Producer'])
-        return jsonify({'Album': update_album[0]})
+        return jsonify({'Changed album': update_album[0]})
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", debug=True)
