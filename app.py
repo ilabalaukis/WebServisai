@@ -43,6 +43,13 @@ def getGenreList(genre):
                 abort(404)
         return jsonify({'Albums': genre_choose})
 
+@app.route('/albums/album/<albumID>', methods=['GET'])
+def getAlbum(albumID):
+        album_choose = [album for album in albums if album['ID'] == albumID]
+        if len(album_choose) == 0:
+                abort(404)
+        return jsonify({'Albums': album_choose})
+
 @app.route('/albums/<albumID>', methods=['DELETE'])
 def delete_album(albumID):
 	deleted_album = [album for album in albums if (album['ID'] == albumID)]
