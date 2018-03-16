@@ -17,7 +17,7 @@ albums = [
         'Producer' : 'Brian Eno'
         },
 
-	{
+		{
          'ID' : '2',
          'Album' : 'Chief Keef', 
          'Artist' : 'Two Zero One Seven', 
@@ -32,23 +32,23 @@ redis = Redis(host='redis', port=6379)
 def hello():
 	return 'List of albums'
 
-@app.route('/albums/', methods=['GET'])
+@app.route('/albums', methods=['GET'])
 def getAllInfo():
-	return jsonify({'Albums':albums})
+	return jsonify({albums})
 
 @app.route('/albums/genre/<genre>', methods=['GET'])
 def getGenreList(genre):
         genre_choose = [genreName for genreName in albums if genreName['Genre'] == genre]
         if len(genre_choose) == 0:
                 abort(404)
-        return jsonify({'Albums': genre_choose})
+        return jsonify({genre_choose})
 
-@app.route('/albums/album/<albumID>', methods=['GET'])
+@app.route('/albums/<albumID>', methods=['GET'])
 def getAlbum(albumID):
         album_choose = [album for album in albums if album['ID'] == albumID]
         if len(album_choose) == 0:
                 abort(404)
-        return jsonify({'Albums': album_choose})
+        return jsonify({album_choose})
 
 @app.route('/albums/<albumID>', methods=['DELETE'])
 def delete_album(albumID):
@@ -56,19 +56,21 @@ def delete_album(albumID):
 	if len(deleted_album) == 0:
 		abort(404)
 	albums.remove(deleted_album[0])
-	return jsonify({'Deleted album:': deleted_album[0]})
+	return jsonify({deletedID})
 
-@app.route('/albums/', methods=['POST'])
+@app.route('/albums', methods=['POST'])
 def new_album():
+lastId = int(albums[len(albums) - 1]['ID']) + 1
 	new_alb = {
-		'ID' : request.json['ID'],
+		'ID' :  str(lastId),
 		'Album' : request.json['Album'],
 		'Artist' : request.json['Artist'],
 		'Genre' : request.json['Genre'],
 		'Producer' : request.json['Producer']
 	}
+
 	albums.append(new_alb)
-	return jsonify({'Added album': new_alb})
+	return jsonify({new_alb}), 201
 
 @app.route('/albums/<albumID>', methods=['PUT'])
 def updateAlbums(albumID):
@@ -89,7 +91,7 @@ def updateAlbums(albumID):
         update_album[0]['Artist'] = request.json.get('Artist', update_album[0]['Artist'])
         update_album[0]['Genre'] = request.json.get('Genre', update_album[0]['Genre'])
         update_album[0]['Producer'] = request.json.get('Producer', update_album[0]['Producer'])
-        return jsonify({'Changed album': update_album[0]})
+        return jsonify({update_album})
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", debug=True)
