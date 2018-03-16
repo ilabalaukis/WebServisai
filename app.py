@@ -13,7 +13,7 @@ albums = [
         'ID' : '1',
         'Album' : 'Brain Eno',
         'Artist' : 'Reflection',
-        'Genre' : 'Ambient',
+        'Genre' : 'Jazz',
         'Producer' : 'Brian Eno'
         },
 
@@ -21,22 +21,8 @@ albums = [
          'ID' : '2',
          'Album' : 'Chief Keef', 
          'Artist' : 'Two Zero One Seven', 
-         'Genre' : 'Drill', 
+         'Genre' : 'Jazz', 
          'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop'
-         }
-]
-
-songs = [
-        {
-         'AlbumID' : '1',
-         'SongTitle' : 'The Big Ship',
-         'SongID':'01'
-         },
-
-         {
-         'AlbumID' : '2',
-         'SongTitle' : 'Earned It',
-         'SongID':'02'
          }
 ]
 
@@ -50,12 +36,12 @@ def hello():
 def getAllInfo():
 	return jsonify({'Albums':albums})
 
-@app.route('/albums/album/<albumID>', methods=['GET'])
-def getSongsList(albumID):
-        song_choose = [song for song in songs if song['AlbumID'] == albumID]
-        if len(song_choose) == 0:
+@app.route('/albums/genre/<genre>', methods=['GET'])
+def getGenreList(genre):
+        genre_choose = [genreName for genreName in albums if genreName['Genre'] == genre]
+        if len(genre_choose) == 0:
                 abort(404)
-        return jsonify({'Songs': song_choose[0]})
+        return jsonify({'Albums': genre_choose})
 
 @app.route('/albums/<albumID>', methods=['DELETE'])
 def delete_album(albumID):
