@@ -60,7 +60,7 @@ def delete_album(albumID):
 
 @app.route('/albums', methods=['POST'])
 def new_album():
-lastId = int(albums[len(albums) - 1]['ID']) + 1
+	lastId = int(albums[len(albums) - 1]['ID']) + 1
 	new_alb = {
 		'ID' :  str(lastId),
 		'Album' : request.json['Album'],
