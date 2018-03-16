@@ -56,7 +56,7 @@ def delete_album(albumID):
 	if len(deleted_album) == 0:
 		abort(404)
 	albums.remove(deleted_album[0])
-	return jsonify(deletedID)
+	return albumID
 
 @app.route('/albums', methods=['POST'])
 def new_album():
