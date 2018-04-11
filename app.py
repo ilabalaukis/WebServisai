@@ -28,6 +28,11 @@ albums = [
 
 redis = Redis(host='redis', port=6379)
 
+@app.route('/hello')
+def hello():
+    r = requests.get('http://www.google.com')
+    return r.text
+
 @app.route('/')
 def hello():
 	return 'List of albums'
