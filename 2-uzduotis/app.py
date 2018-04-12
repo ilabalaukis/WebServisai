@@ -1,5 +1,4 @@
 from flask import Flask
-from redis import Redis
 from flask import jsonify
 from flask import request
 from flask import abort
@@ -29,8 +28,6 @@ albums = [
          }
 ]
 
-redis = Redis(host='redis', port=6379)
-
 @app.route('/')
 def hello():
 	return 'List of albums'
@@ -40,8 +37,6 @@ def hello():
 #    r = requests.get('http://172.18.0.1:81/movies').text
 #    r = json.loads(r)
 #    return jsonify(r), 200
-#@app.route('/movies/<albumID>',methods=['PUT'])
-#def putMovies():
 	
 @app.route('/albums', methods=['GET'])
 def getAllInfo():
@@ -60,50 +55,7 @@ def getAlbum(albumID):
         if len(album_choose) == 0:
                 abort(404)
         album_choose = jsonify(album_choose)
-        return album_choose
-
-@app.route('/albums/<albumID>/movie', methods=['GET'])
-def getMovie(albumID):
-        album_choose = [album for album in albums if album['ID'] == albumID]
-        if len(album_choose) == 0:
-                abort(404)
-        url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
-        r = requests.get(url).text
-        r = json.loads(r)
-        return jsonify(r), 200
-
-@app.route('/albums/<albumID>/movie', methods=['PUT'])
-def putMovie(albumID):
-        album_choose = [album for album in albums if album['ID'] == albumID]
-        if len(album_choose) == 0:
-                abort(404)
-        changeMovie = {'Title': 'pakeiciau'}
-        url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
-        r = requests.put(url, data=changeMovie)
-        r = json.loads(r)
-        return jsonify(r), 200       
-@app.route('/albums/movie', methods=['POST'])
-def new_album_movie():
-    url = 'http://172.18.0.1:81/movies'
-    lastId = int(albums[len(albums) - 1]['ID']) + 1
-    new_movie = {
-		'Title': request.json['Title'],
-		'Genre': request.json['Genre of movie'],
-		'Rating': request.json['Rating'],
-		'Release date': request.json['Release date']
-	}
-    r = requests.post(url, json=new_movie)
-    r = json.loads(r.text)
-    new_alb = {
-		'ID' :  str(lastId),
-		'Album' : request.json['Album'],
-		'Artist' : request.json['Artist'],
-		'Genre' : request.json['Genre'],
-		'Producer' : request.json['Producer'],
-        'MovieID' : r['ID']
-	}
-    albums.append(new_alb)
-    return jsonify(new_alb, r), 201
+        return album_choose 
 
 @app.route('/albums/<albumID>', methods=['DELETE'])
 def delete_album(albumID):
@@ -123,7 +75,6 @@ def new_album():
 		'Genre' : request.json['Genre'],
 		'Producer' : request.json['Producer']
 	}
-
 	albums.append(new_alb)
 	return jsonify(new_alb), 201
 
@@ -147,6 +98,42 @@ def updateAlbums(albumID):
         update_album[0]['Genre'] = request.json.get('Genre', update_album[0]['Genre'])
         update_album[0]['Producer'] = request.json.get('Producer', update_album[0]['Producer'])
         return jsonify(update_album)
+
+#using other web server
+
+@app.route('/albums/<albumID>/movie', methods=['GET'])
+def getMovie(albumID):
+        album_choose = [album for album in albums if album['ID'] == albumID]
+        if len(album_choose) == 0:
+                abort(404)
+        url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+        r = requests.get(url).text
+        r = json.loads(r)
+        return jsonify(r), 200
+
+@app.route('/albums/movie', methods=['POST'])
+def new_album_movie():
+    url = 'http://172.18.0.1:81/movies'
+    lastId = int(albums[len(albums) - 1]['ID']) + 1
+    new_movie = {
+        'Title': request.json['Title'],
+        'Genre': request.json['Genre of movie'],
+        'Rating': request.json['Rating'],
+        'Release date': request.json['Release date']
+    }
+    r = requests.post(url, json=new_movie)
+    r = json.loads(r.text)
+    new_alb = {
+        'ID' :  str(lastId),
+        'Album' : request.json['Album'],
+        'Artist' : request.json['Artist'],
+        'Genre' : request.json['Genre'],
+        'Producer' : request.json['Producer'],
+        'MovieID' : r['ID']
+    }
+    albums.append(new_alb)
+    return jsonify(new_alb, r), 201
+
 @app.route('/albums/<albumID>/movie', methods=['PATCH'])
 def changeMovie(albumID):
     album_choose = [album for album in albums if album['ID'] == albumID]
@@ -160,7 +147,23 @@ def changeMovie(albumID):
         album_choose[0]["MovieID"] = request.json['MovieID']
         return jsonify(album_choose[0]), 200
 
-if __name__ == "__main__":
-	app.run(host="0.0.0.0", debug=True, threaded=True)
+@app.route('/albums/<albumID>/movie', methods=['PUT'])
+def putMovie(albumID):
+    album_choose = [album for album in albums if album['ID'] == albumID]
+    if len(album_choose) == 0:
+        abort(404)
+    url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+    change_movie = {
+        'Title': request.json['Title'],
+        'Genre': request.json['Genre'],
+        'Rating': request.json['Rating'],
+        'Release date': request.json['Release date']
+    }
+    r = requests.put(url, json=change_movie)
+    r = r.text
+    r = json.loads(r)
+    return jsonify(r), 200
 
-	
+if __name__ == "__main__":
+	app.run(host="0.0.0.0", debug=True)
+
