@@ -23,3 +23,5 @@ curl -i -X POST -H "Content-Type: application/json" -d '{"Title": "Home Alone", 
 curl -i -X PATCH -H "Content-Type: application/json" -d '{"MovieID": "10"}' http://localhost/albums/1/movie
 10. PUT (CHANGE) information about album's movie:
 curl -i -H "Content-type: application/json" -X PUT -d '{"Title": "Best Movie", "Genre": "Comedy", "Rating": "7", "Release date": "2000"}' http://localhost/albums/1/movie
+11. DELETE album and it's movie:
+curl -i -X DELETE http://localhost/albums/1/movie

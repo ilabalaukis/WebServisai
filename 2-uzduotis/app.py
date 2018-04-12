@@ -17,7 +17,6 @@ albums = [
         'Producer' : 'Brian Eno',
 		'MovieID' : '1'
         },
-
 		{
          'ID' : '2',
          'Album' : 'Chief Keef', 
@@ -161,6 +160,17 @@ def putMovie(albumID):
     }
     r = requests.put(url, json=change_movie)
     r = r.text
+    r = json.loads(r)
+    return jsonify(r), 200
+
+@app.route('/albums/<albumID>/movie', methods=['DELETE'])
+def deleteMovie(albumID):
+    album_choose = [album for album in albums if album['ID'] == albumID]
+    if len(album_choose) == 0:
+        abort(404)
+    url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+    r = requests.delete(url).text
+    albums.remove(album_choose[0])
     r = json.loads(r)
     return jsonify(r), 200
 
