@@ -3,7 +3,8 @@ from redis import Redis
 from flask import jsonify
 from flask import request
 from flask import abort
-
+import json
+import requests
 import os
 
 app = Flask(__name__)
@@ -14,7 +15,8 @@ albums = [
         'Album' : 'Brain Eno',
         'Artist' : 'Reflection',
         'Genre' : 'Jazz',
-        'Producer' : 'Brian Eno'
+        'Producer' : 'Brian Eno',
+		'Movie ID' : '1'
         },
 
 		{
@@ -22,7 +24,8 @@ albums = [
          'Album' : 'Chief Keef', 
          'Artist' : 'Two Zero One Seven', 
          'Genre' : 'Jazz', 
-         'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop'
+         'Producer' : 'Chief Keef, Leek-e-Leek, Lex Luger, Young Chop',
+         'Movie ID' : '2'
          }
 ]
 
@@ -31,6 +34,12 @@ redis = Redis(host='redis', port=6379)
 @app.route('/')
 def hello():
 	return 'List of albums'
+
+@app.route('/movies', methods=['GET'])
+def getMovies():
+    r = requests.get('http://172.18.0.1:81/movies').text
+    r = json.loads(r)
+    return jsonify(r), 200
 
 @app.route('/albums', methods=['GET'])
 def getAllInfo():
@@ -94,6 +103,6 @@ def updateAlbums(albumID):
         return jsonify(update_album)
 
 if __name__ == "__main__":
-	app.run(host="0.0.0.0", debug=True)
+	app.run(host="0.0.0.0", debug=True, threaded=True)
 
 	
