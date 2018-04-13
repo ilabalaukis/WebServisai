@@ -116,9 +116,9 @@ def new_album_movie():
     lastId = int(albums[len(albums) - 1]['ID']) + 1
     new_movie = {
         'Title': request.json['Title'],
-        'Genre': request.json['Genre of movie'],
+        'Genre': request.json['GenreOfMovie'],
         'Rating': request.json['Rating'],
-        'Release date': request.json['Release date']
+        'Release date': request.json['ReleaseDate']
     }
     r = requests.post(url, json=new_movie)
     r = json.loads(r.text)
