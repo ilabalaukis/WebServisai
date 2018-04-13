@@ -31,11 +31,11 @@ albums = [
 def hello():
 	return 'List of albums'
 
-#@app.route('/movies/<albumID>', methods=['GET'])
-#def getMovies():
-#    r = requests.get('http://172.18.0.1:81/movies').text
-#    r = json.loads(r)
-#    return jsonify(r), 200
+@app.route('/movies', methods=['GET'])
+def getMovies():
+    r = requests.get('http://web2:81/movies').text
+    r = json.loads(r)
+    return jsonify(r), 200
 	
 @app.route('/albums', methods=['GET'])
 def getAllInfo():
@@ -105,14 +105,14 @@ def getMovie(albumID):
         album_choose = [album for album in albums if album['ID'] == albumID]
         if len(album_choose) == 0:
                 abort(404)
-        url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+        url = 'http://web2:81/movies/'+album_choose[0]['MovieID']
         r = requests.get(url).text
         r = json.loads(r)
         return jsonify(r), 200
 
 @app.route('/albums/movie', methods=['POST'])
 def new_album_movie():
-    url = 'http://172.18.0.1:81/movies'
+    url = 'http://web2:81/movies'
     lastId = int(albums[len(albums) - 1]['ID']) + 1
     new_movie = {
         'Title': request.json['Title'],
@@ -138,7 +138,7 @@ def changeMovie(albumID):
     album_choose = [album for album in albums if album['ID'] == albumID]
     if len(album_choose) == 0:
             abort(404)
-    url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+    url = 'http://web2:81/movies/'+album_choose[0]['MovieID']
     r = requests.get(url)
     if r.status_code == 404:
         return jsonify({'Error' : 'Movie not found.'}), 404
@@ -151,7 +151,7 @@ def putMovie(albumID):
     album_choose = [album for album in albums if album['ID'] == albumID]
     if len(album_choose) == 0:
         abort(404)
-    url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+    url = 'http://web2:81/movies/'+album_choose[0]['MovieID']
     change_movie = {
         'Title': request.json['Title'],
         'Genre': request.json['Genre'],
@@ -168,12 +168,12 @@ def deleteMovie(albumID):
     album_choose = [album for album in albums if album['ID'] == albumID]
     if len(album_choose) == 0:
         abort(404)
-    url = 'http://172.18.0.1:81/movies/'+album_choose[0]['MovieID']
+    url = 'http://web2:81/movies/'+album_choose[0]['MovieID']
     r = requests.delete(url).text
     albums.remove(album_choose[0])
     r = json.loads(r)
     return jsonify(r), 200
 
 if __name__ == "__main__":
-	app.run(host="0.0.0.0", debug=True)
+	app.run(host="0.0.0.0", debug=True, port=5000)
 

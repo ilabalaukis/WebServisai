@@ -1,20 +1,22 @@
+  
 version: '2'
 
 services:
+
+  web2:
+    build: ./WS/
+    command: python ./WS/app.py runserver 0.0.0.0:81
+    ports:
+     - "81:5000"
+    volumes:
+     - .:/code
+
   web:
     build: .
     command: python app.py
     ports:
-     - "80:5000"
+     - "5000:5000"
     volumes:
      - .:/code
-
-  web2:
-    build: ./WS/
-    command: python ./WS/app.py
-    ports:
-     - "81:5000"
-    depends_on:
-      - web
-    volumes:
-     - .:/code
+    links:
+     - web2
