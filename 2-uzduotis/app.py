@@ -172,7 +172,7 @@ def deleteMovie(albumID):
     r = requests.delete(url).text
     albums.remove(album_choose[0])
     r = json.loads(r)
-    return jsonify(r), 200
+    return albumID
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", debug=True, port=5000)
