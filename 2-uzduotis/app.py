@@ -156,7 +156,7 @@ def putMovie(albumID):
         'Title': request.json['Title'],
         'Genre': request.json['Genre'],
         'Rating': request.json['Rating'],
-        'Release date': request.json['Release date']
+        'Release date': request.json['ReleaseDate']
     }
     r = requests.put(url, json=change_movie)
     r = r.text
