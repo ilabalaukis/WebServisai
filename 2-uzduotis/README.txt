@@ -18,10 +18,10 @@ _____________________________________________________________________________
 7. GET information about a movie an album was used in:
 curl -i http://193.219.91.104:4355/albums/1/movie
 8. POST a new album and an album's movie information:
-curl -i -X POST -H "Content-Type: application/json" -d '{"Title": "Home Alone", "Genre of movie": "Comedy", "Rating": "5", "Release date": "1997", "Album" : "Who", "Artist" : "John", "Genre" : "POP", "Producer" : "Mark"}' http://193.219.91.104:4355/albums/movie
+curl -i -X POST -H "Content-Type: application/json" -d '{"Title": "Home Alone", "GenreOfMovie": "Comedy", "Rating": "5", "ReleaseDate": "1997", "Album" : "Who", "Artist" : "John", "Genre" : "POP", "Producer" : "Mark"}' http://193.219.91.104:4355/albums/movie
 9. PATCH to change album's movie ID:
 curl -i -X PATCH -H "Content-Type: application/json" -d '{"MovieID": "10"}' http://193.219.91.104:4355/albums/1/movie
 10. PUT (CHANGE) information about album's movie:
-curl -i -H "Content-type: application/json" -X PUT -d '{"Title": "Best Movie", "Genre": "Comedy", "Rating": "7", "Release date": "2000"}' http://193.219.91.104:4355/albums/1/movie
+curl -i -H "Content-type: application/json" -X PUT -d '{"Title": "Best Movie", "Genre": "Comedy", "Rating": "7", "ReleaseDate": "2000"}' http://193.219.91.104:4355/albums/1/movie
 11. DELETE album and it's movie:
 curl -i -X DELETE http://193.219.91.104:4355/albums/1/movie
