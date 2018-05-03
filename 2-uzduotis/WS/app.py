@@ -109,7 +109,7 @@ def getMovieByID(movieID):
 def newMovie():
         numberOfMovies = len(movies)
         new_Movie={
-                'ID' : numberOfMovies,
+                'ID' : str(numberOfMovies),
                 'Title' : request.json['Title'],
                 'Release date' : request.json['Release date'],
                 'Rating' : request.json['Rating'],
