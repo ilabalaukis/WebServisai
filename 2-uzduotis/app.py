@@ -37,9 +37,9 @@ def getMovies():
     r = json.loads(r)
     return jsonify(r), 200
 	
-@app.route('/albums', methods=['GET'])
-def getAllInfo():
-	return jsonify(albums)
+#@app.route('/albums', methods=['GET'])
+#def getAllInfo():
+#	return jsonify(albums)
 
 @app.route('/albums/genre/<genre>', methods=['GET'])
 def getGenreList(genre):
@@ -127,6 +127,17 @@ def updateAlbums(albumID):
         return jsonify(update_album)
 
 #using other web server
+@app.route('/albums', methods=['GET'])
+def getAllInfo():
+    if(request.args.get('embedded', '') == "movie"):
+            albumsEmb=copy.deepcopy(albums)
+            for i in range(0, len(albums)):
+                r = requests.get('http://web2:81/movies/'+albumsEmb[int(i)]['MovieID'])
+                r = json.loads(r.text)
+                albumsEmb[int(i)]['MovieID'] = r
+            return jsonify(albumsEmb), 200
+    else:
+        return jsonify(albums), 200
 
 @app.route('/albums/<albumID>', methods=['GET'])
 def getAlbum(albumID):
