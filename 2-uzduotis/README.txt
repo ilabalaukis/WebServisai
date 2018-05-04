@@ -20,7 +20,7 @@ _____________________________________________________________________________
 7. GET information about albums with embedded every album's movie:
 curl -i http://193.219.91.104:4355/albums?embedded=movie
 8. GET information about album with specific ID with embedded album's movie:
-curl -i http://193.219.91.104:4355/album/1?embedded=movie
+curl -i http://193.219.91.104:4355/albums/1?embedded=movie
 9. POST a new album with MovieID of existing movie:
 curl -i -X POST -H "Content-Type: application/json" -d '{"Album" : "Who", "Artist" : "John", "Genre" : "POP", "Producer" : "Mark", "MovieID" : "2"}' http://193.219.91.104:4355/albums
 10. POST a new album with embedded album's movie information:
