@@ -132,27 +132,33 @@ def getAllInfo():
     if(request.args.get('embedded', '') == "movie"):
             albumsEmb=copy.deepcopy(albums)
             for i in range(0, len(albums)):
-                r = requests.get('http://web2:81/movies/'+albumsEmb[int(i)]['MovieID'])
-                r = json.loads(r.text)
-                albumsEmb[int(i)]['MovieID'] = r
+                try:
+                    r = requests.get('http://web2:81/movies/'+albumsEmb[int(i)]['MovieID'])
+                    r = json.loads(r.text)
+                    albumsEmb[int(i)]['MovieID'] = r
+                except requests.exceptions.RequestException as e:
+                    albumsEmb[int(i)]['MovieID'] = "null"
             return jsonify(albumsEmb), 200
     else:
         return jsonify(albums), 200
 
 @app.route('/albums/<albumID>', methods=['GET'])
 def getAlbum(albumID):
-     if(request.args.get('embedded', '') == "movie"):
-         albumsEmb=copy.deepcopy(albums)
-         r = requests.get('http://web2:81/movies/'+albumsEmb[int(albumID)-1]['MovieID'])
-         r = json.loads(r.text)
-         albumsEmb[int(albumID)-1]['MovieID'] = r
-         return jsonify(albumsEmb[int(albumID)-1]), 200
-     else:
-         album_choose = [album for album in albums if album['ID'] == albumID]
-         if len(album_choose) == 0:
-                 abort(404)
-         album_choose = jsonify(album_choose)
-         return album_choose 
+    if(request.args.get('embedded', '') == "movie"):
+        albumsEmb=copy.deepcopy(albums)
+        try:
+            r = requests.get('http://web2:81/movies/'+albumsEmb[int(albumID)-1]['MovieID'])
+            r = json.loads(r.text)
+            albumsEmb[int(albumID)-1]['MovieID'] = r
+        except requests.exceptions.RequestException as e:
+            albumsEmb[int(albumID)-1]['MovieID'] = "null"
+        return jsonify(albumsEmb[int(albumID)-1]), 200
+    else:
+        album_choose = [album for album in albums if album['ID'] == albumID]
+        if len(album_choose) == 0:
+                abort(404)
+        album_choose = jsonify(album_choose)
+        return album_choose 
 
 @app.route('/albums/<albumID>/movie', methods=['PATCH'])
 def changeMovie(albumID):
